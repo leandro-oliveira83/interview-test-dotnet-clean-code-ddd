@@ -6,4 +6,21 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Patient\Delete\" />
+    <Folder Include="UseCases\Patient\Get\" />
+    <Folder Include="UseCases\Patient\Update\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\interviewTest.PatientService.Communication\interviewTest.PatientService.Communication.csproj" />
+    <ProjectReference Include="..\..\Shared\interviewTest.PatientService.Exceptions\interviewTest.PatientService.Exceptions.csproj" />
+    <ProjectReference Include="..\interviewTest.PatientService.Domain\interviewTest.PatientService.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>
