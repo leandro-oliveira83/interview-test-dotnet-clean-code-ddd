@@ -1,6 +1,6 @@
-namespace interviewTest.PatientService.Communication.Responses;
+namespace interviewTest.PatientService.Communication.Requests;
 
-public class ResponseRegisteredPatientJson
+public class ResponseUpdatedPatientJson
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }  = string.Empty;

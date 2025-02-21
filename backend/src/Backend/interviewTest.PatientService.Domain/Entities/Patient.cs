@@ -3,9 +3,7 @@ namespace interviewTest.PatientService.Domain.Entities;
 public class Patient : EntityBase
 {
     public string FirstName { get; set; } 
-    public string MiddleName { get; set; }
     public string LastName { get; set; }
-    public string Suffix { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string Gender { get; set; }
     public string MaritalStatus { get; set; }

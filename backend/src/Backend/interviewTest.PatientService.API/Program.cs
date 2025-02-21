@@ -1,4 +1,7 @@
 using interviewTest.PatientService.Application;
+using interviewTest.PatientService.Infrastructure;
+using interviewTest.PatientService.Infrastructure.Extensions;
+using interviewTest.PatientService.Infrastructure.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMvc();
 
 builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 
 var app = builder.Build();
@@ -23,5 +27,21 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
+MigrateDatabase();
+
 app.Run();
+
+// run migrate database
+void MigrateDatabase()
+{
+    if (builder.Configuration.IsUnitTestEnviroment())
+        return;
+
+    var connectionString = builder.Configuration.ConnetionString();
+
+    // create scopre for dependency injection
+    var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+
+    DatabaseMigration.Migrate(connectionString, serviceScope.ServiceProvider);
+}
 

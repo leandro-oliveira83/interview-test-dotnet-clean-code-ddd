@@ -1,38 +1,43 @@
 using AutoMapper;
 using interviewTest.PatientService.Communication.Requests;
-using interviewTest.PatientService.Communication.Responses;
 using interviewTest.PatientService.Domain.Repositories.Patient;
 using openpbl.Shared.Exceptions.ExceptionBase;
 
-namespace interviewTest.PatientService.Application.UseCases.Patient.Register;
+namespace interviewTest.PatientService.Application.UseCases.Patient.Update;
 
-public class RegisterPatientUseCase : IRegisterPatientUseCase
+public class UpdatePatientUseCase : IUpdatePatientUseCase
 {
     private readonly IPatientRepository _patientRepository;
     private readonly IMapper _mapper;
     
-    public RegisterPatientUseCase(IPatientRepository patientRepository,
+    public UpdatePatientUseCase(IPatientRepository patientRepository,
         IMapper mapper)
     {
         _patientRepository = patientRepository;
         _mapper = mapper;
     }
     
-    public async Task<ResponseRegisteredPatientJson> Execute(RequestRegisterPatientJson request)
+    public async Task<ResponseUpdatedPatientJson> Execute(RequestUpdatePatientJson request)
     {
         await Validate(request);
         
         var patient = _mapper.Map<Domain.Entities.Patient>(request);
         
-        await _patientRepository.CreateAsync(patient);
+        var existingPatient = await _patientRepository.GetByIdAsync(patient.Id);
+        if (existingPatient == null)
+        {
+            throw new KeyNotFoundException("The patient not found");
+        }
         
-        var response = _mapper.Map<ResponseRegisteredPatientJson>(patient);
+        await _patientRepository.UpdateAsync(patient);
+        
+        var response = _mapper.Map<ResponseUpdatedPatientJson>(patient);
         
         return response;
     }
     
-    private async Task Validate(RequestRegisterPatientJson request){
-        var validator = new RegisterPatientValidator();
+    private async Task Validate(RequestUpdatePatientJson request){
+        var validator = new UpdatePatientValidator();
 
         var result = validator.Validate(request);
 
