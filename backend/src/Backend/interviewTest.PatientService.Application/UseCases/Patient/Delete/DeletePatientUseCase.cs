@@ -10,13 +10,10 @@ namespace interviewTest.PatientService.Application.UseCases.Patient.Delete;
 public class DeletePatientUseCase : IDeletePatientUseCase
 {
     private readonly IPatientRepository _patientRepository;
-    private readonly IMapper _mapper;
     
-    public DeletePatientUseCase(IPatientRepository patientRepository,
-        IMapper mapper)
+    public DeletePatientUseCase(IPatientRepository patientRepository)
     {
         _patientRepository = patientRepository;
-        _mapper = mapper;
     }
     
     public async Task<ResponseDeletedPatientJson> Execute(RequestDeletePatientJson request)
