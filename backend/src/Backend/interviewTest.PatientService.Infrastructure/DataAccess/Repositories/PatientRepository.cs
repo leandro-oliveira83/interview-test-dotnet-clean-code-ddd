@@ -14,7 +14,26 @@ public class PatientRepository : IPatientRepository
     {
         var patients = new List<Patient>();
 
-        var sql = "SELECT Id, FirstName, LastName, Email FROM Patients";
+        var sql = @"SELECT Id,
+                    FirstName,
+                    LastName,
+                    DateOfBirth,
+                    Gender,
+                    MaritalStatus,
+                    Ethnicity,
+                    Race,
+                    SocialSecurityNumber,
+                    Email,
+                    PhoneNumber,
+                    AlternatePhoneNumber,
+                    AddressLine1,
+                    AddressLine2,
+                    City,
+                    State,
+                    ZipCode,
+                    Country,
+                    CreatedAt,
+                    UpdatedAt FROM Patients";
 
         using var command = new SqlCommand(sql, (SqlConnection)_dbContext.Connection);
         using var reader = await command.ExecuteReaderAsync();
@@ -23,11 +42,24 @@ public class PatientRepository : IPatientRepository
         {
             patients.Add(new Patient
             {
-                Id = reader.GetGuid(0),
-                FirstName = reader.GetString(1),
-                LastName = reader.GetString(2),
-                //DateOfBirth = reader.GetDateTime(3),
-                Email = reader.IsDBNull(3) ? null : reader.GetString(3)
+                Id = reader.GetGuid(reader.GetOrdinal("Id")),
+                FirstName = reader.IsDBNull(reader.GetOrdinal("FirstName")) ? null : reader.GetString(reader.GetOrdinal("FirstName")),
+                LastName = reader.IsDBNull(reader.GetOrdinal("LastName")) ? null : reader.GetString(reader.GetOrdinal("LastName")),
+                DateOfBirth = reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
+                Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
+                MaritalStatus = reader.IsDBNull(reader.GetOrdinal("MaritalStatus")) ? null : reader.GetString(reader.GetOrdinal("MaritalStatus")),
+                Ethnicity = reader.IsDBNull(reader.GetOrdinal("Ethnicity")) ? null : reader.GetString(reader.GetOrdinal("Ethnicity")),
+                Race = reader.IsDBNull(reader.GetOrdinal("Race")) ? null : reader.GetString(reader.GetOrdinal("Race")),
+                SocialSecurityNumber = reader.IsDBNull(reader.GetOrdinal("SocialSecurityNumber")) ? null : reader.GetString(reader.GetOrdinal("SocialSecurityNumber")),
+                Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email")),
+                PhoneNumber = reader.IsDBNull(reader.GetOrdinal("PhoneNumber")) ? null : reader.GetString(reader.GetOrdinal("PhoneNumber")),
+                AlternatePhoneNumber = reader.IsDBNull(reader.GetOrdinal("AlternatePhoneNumber")) ? null : reader.GetString(reader.GetOrdinal("AlternatePhoneNumber")),
+                AddressLine1 = reader.IsDBNull(reader.GetOrdinal("AddressLine1")) ? null : reader.GetString(reader.GetOrdinal("AddressLine1")),
+                AddressLine2 = reader.IsDBNull(reader.GetOrdinal("AddressLine2")) ? null : reader.GetString(reader.GetOrdinal("AddressLine2")),
+                City = reader.IsDBNull(reader.GetOrdinal("City")) ? null : reader.GetString(reader.GetOrdinal("City")),
+                State = reader.IsDBNull(reader.GetOrdinal("State")) ? null : reader.GetString(reader.GetOrdinal("State")),
+                ZipCode = reader.IsDBNull(reader.GetOrdinal("ZipCode")) ? null : reader.GetString(reader.GetOrdinal("ZipCode")),
+                Country = reader.IsDBNull(reader.GetOrdinal("Country")) ? null : reader.GetString(reader.GetOrdinal("Country")),
             });
         }
 
