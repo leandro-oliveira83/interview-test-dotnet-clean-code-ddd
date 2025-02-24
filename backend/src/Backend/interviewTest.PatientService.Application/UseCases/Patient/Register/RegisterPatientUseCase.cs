@@ -2,6 +2,7 @@ using AutoMapper;
 using interviewTest.PatientService.Communication.Requests;
 using interviewTest.PatientService.Communication.Responses;
 using interviewTest.PatientService.Domain.Repositories.Patient;
+using Microsoft.Extensions.Logging;
 using openpbl.Shared.Exceptions.ExceptionBase;
 
 namespace interviewTest.PatientService.Application.UseCases.Patient.Register;
@@ -10,16 +11,21 @@ public class RegisterPatientUseCase : IRegisterPatientUseCase
 {
     private readonly IPatientRepository _patientRepository;
     private readonly IMapper _mapper;
+    private readonly ILogger<RegisterPatientUseCase> _logger;
     
     public RegisterPatientUseCase(IPatientRepository patientRepository,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<RegisterPatientUseCase> logger)
     {
         _patientRepository = patientRepository;
         _mapper = mapper;
+        _logger = logger;
     }
     
     public async Task<ResponseRegisteredPatientJson> Execute(RequestRegisterPatientJson request)
     {
+        _logger.LogInformation("Creating a new patient, name: {FirstName}", request.FirstName);
+        
         await Validate(request);
         
         var patient = _mapper.Map<Domain.Entities.Patient>(request);

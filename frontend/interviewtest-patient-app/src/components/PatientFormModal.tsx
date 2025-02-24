@@ -14,8 +14,6 @@ export default function PatientFormModal({ isOpen, onClose, patient, onSuccess }
   const { register, handleSubmit, reset, formState: { errors } } = useForm<Patient>();
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
-  //console.log(patient)
-
   useEffect(() => {
     if (patient) {
       const formattedDate = patient.dateOfBirth ? new Date(patient.dateOfBirth).toISOString().split('T')[0] : '';
@@ -31,8 +29,8 @@ export default function PatientFormModal({ isOpen, onClose, patient, onSuccess }
 
   const onSubmit = async (data: Patient) => {
     try {
-      patient?.id 
-        ? await api.put('/Patient', { ...data, id: patient.id }) 
+      patient?.id
+        ? await api.put('/Patient', { ...data, id: patient.id })
         : await api.post('/Patient', data);
       onSuccess();
       onClose();

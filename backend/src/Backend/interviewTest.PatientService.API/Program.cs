@@ -1,23 +1,35 @@
+using interviewTest.PatientService.API.Filters;
 using interviewTest.PatientService.Application;
 using interviewTest.PatientService.Infrastructure;
 using interviewTest.PatientService.Infrastructure.Extensions;
+using interviewTest.PatientService.Infrastructure.HealthChecks;
+using interviewTest.PatientService.Infrastructure.Logging;
 using interviewTest.PatientService.Infrastructure.Migrations;
+using Serilog;
+
+Log.Information("Starting web application");
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddDefaultLogging();
+
 builder.Services.AddEndpointsApiExplorer();
+builder.AddBasicHealthChecks();
+
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMvc();
+builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
+
+var baseUrl = builder.Configuration.GetValue<string>("FrontEnd:BaseUrl");
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") 
+        policy.WithOrigins(baseUrl) 
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials(); 
@@ -36,6 +48,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReact");
 
 app.UseHttpsRedirection();
+
+app.UseBasicHealthChecks();
 
 app.MapControllers();
 
