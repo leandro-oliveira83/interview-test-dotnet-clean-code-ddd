@@ -1,6 +1,7 @@
 using AutoMapper;
 using interviewTest.PatientService.Communication.Requests;
 using interviewTest.PatientService.Domain.Repositories.Patient;
+using Microsoft.Extensions.Logging;
 using openpbl.Shared.Exceptions.ExceptionBase;
 
 namespace interviewTest.PatientService.Application.UseCases.Patient.Update;
@@ -9,16 +10,21 @@ public class UpdatePatientUseCase : IUpdatePatientUseCase
 {
     private readonly IPatientRepository _patientRepository;
     private readonly IMapper _mapper;
+    private readonly ILogger<UpdatePatientUseCase> _logger;
     
     public UpdatePatientUseCase(IPatientRepository patientRepository,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<UpdatePatientUseCase> logger)
     {
         _patientRepository = patientRepository;
         _mapper = mapper;
+        _logger = logger;
     }
     
     public async Task<ResponseUpdatedPatientJson> Execute(RequestUpdatePatientJson request)
     {
+        _logger.LogInformation("Editing a patient, id: {id}", request.Id);
+        
         await Validate(request);
         
         var patient = _mapper.Map<Domain.Entities.Patient>(request);

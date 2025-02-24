@@ -2,6 +2,7 @@ using AutoMapper;
 using interviewTest.PatientService.Communication.Requests;
 using interviewTest.PatientService.Communication.Responses;
 using interviewTest.PatientService.Domain.Repositories.Patient;
+using Microsoft.Extensions.Logging;
 using openpbl.Shared.Exceptions.ExceptionBase;
 using KeyNotFoundException = System.Collections.Generic.KeyNotFoundException;
 
@@ -10,14 +11,19 @@ namespace interviewTest.PatientService.Application.UseCases.Patient.Delete;
 public class DeletePatientUseCase : IDeletePatientUseCase
 {
     private readonly IPatientRepository _patientRepository;
+    private readonly ILogger<DeletePatientUseCase> _logger;
     
-    public DeletePatientUseCase(IPatientRepository patientRepository)
+    public DeletePatientUseCase(IPatientRepository patientRepository,
+        ILogger<DeletePatientUseCase> logger)
     {
         _patientRepository = patientRepository;
+        _logger = logger;
     }
     
     public async Task<ResponseDeletedPatientJson> Execute(RequestDeletePatientJson request)
     {
+        _logger.LogInformation("Remove a patient, id: {id}", request.Id);
+        
         await Validate(request);
         
         var success = await _patientRepository.DeleteAsync(request.Id);
