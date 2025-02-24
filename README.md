@@ -47,9 +47,10 @@ This project is a full-stack application for managing patients, built with **.NE
    ```
 
 4. **Run the backend:**
+   Make sure you are in the interviewTest.PatientService.API project and run the following command.
+   The migration will be performed automatically by the project.
    ```bash
    dotnet restore
-   dotnet ef database update  # Apply migrations to create the database
    dotnet run
    ```
 
