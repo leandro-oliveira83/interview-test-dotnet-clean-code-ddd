@@ -1,3 +1,4 @@
+using CommonTestUtilities.Logging;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
@@ -41,8 +42,8 @@ public class RegisterPatientUseCaseTest
     {
         var mapper = MapperBuilder.Build();
         var patientRepositoryBuilder = new PatientRepositoryBuilder().Build();
-        
+        var logger = new LoggerBuilder<RegisterPatientUseCase>();
 
-        return new RegisterPatientUseCase(patientRepositoryBuilder, mapper);
+        return new RegisterPatientUseCase(patientRepositoryBuilder, mapper, logger.Build());
     }
 }

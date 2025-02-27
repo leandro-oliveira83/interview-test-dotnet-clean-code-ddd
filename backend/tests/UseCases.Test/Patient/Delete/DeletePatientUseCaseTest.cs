@@ -1,4 +1,5 @@
 using CommonTestUtilities.Entities;
+using CommonTestUtilities.Logging;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using FluentAssertions;
@@ -27,7 +28,8 @@ public class DeletePatientUseCaseTest
     private static DeletePatientUseCase CreateUseCase(interviewTest.PatientService.Domain.Entities.Patient patient)
     {
         var patientRepositoryBuilder = new PatientRepositoryBuilder().DeleteAsync(patient).Build();
+        var logger = new LoggerBuilder<DeletePatientUseCase>();
 
-        return new DeletePatientUseCase(patientRepositoryBuilder);
+        return new DeletePatientUseCase(patientRepositoryBuilder, logger.Build());
     }
 }

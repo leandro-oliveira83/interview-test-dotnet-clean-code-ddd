@@ -23,16 +23,25 @@ public class DeletePatientUseCase : IDeletePatientUseCase
     public async Task<ResponseDeletedPatientJson> Execute(RequestDeletePatientJson request)
     {
         _logger.LogInformation("Remove a patient, id: {id}", request.Id);
-        
-        await Validate(request);
-        
-        var success = await _patientRepository.DeleteAsync(request.Id);
-        if (!success)
-            throw new KeyNotFoundException($"Patient with ID {request.Id} not found");
 
-        await _patientRepository.DeleteAsync(request.Id);
+        try
+        {
+            await Validate(request);
         
-        return new ResponseDeletedPatientJson() { Success = true };
+            var success = await _patientRepository.DeleteAsync(request.Id);
+            if (!success)
+                throw new KeyNotFoundException($"Patient with ID {request.Id} not found");
+
+            await _patientRepository.DeleteAsync(request.Id);
+        
+            return new ResponseDeletedPatientJson() { Success = true };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Delete a patient - {Id}", request.Id);
+            throw new Exception("Failed to delete patient");
+        }
+
     }
     
     private async Task Validate(RequestDeletePatientJson request){

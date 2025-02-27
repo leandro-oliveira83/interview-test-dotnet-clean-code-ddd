@@ -26,20 +26,30 @@ public class UpdatePatientUseCase : IUpdatePatientUseCase
         _logger.LogInformation("Editing a patient, id: {id}", request.Id);
         
         await Validate(request);
-        
-        var patient = _mapper.Map<Domain.Entities.Patient>(request);
-        
-        var existingPatient = await _patientRepository.GetByIdAsync(patient.Id);
-        if (existingPatient == null)
+
+        try
         {
-            throw new KeyNotFoundException("The patient not found");
+        
+            var patient = _mapper.Map<Domain.Entities.Patient>(request);
+        
+            var existingPatient = await _patientRepository.GetByIdAsync(patient.Id);
+            if (existingPatient == null)
+            {
+                throw new KeyNotFoundException("The patient not found");
+            }
+        
+            await _patientRepository.UpdateAsync(patient);
+        
+            var response = _mapper.Map<ResponseUpdatedPatientJson>(patient);
+        
+            return response; 
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Update a patient - {Id}", request.Id);
+            throw new Exception(ex.Message);
         }
         
-        await _patientRepository.UpdateAsync(patient);
-        
-        var response = _mapper.Map<ResponseUpdatedPatientJson>(patient);
-        
-        return response;
     }
     
     private async Task Validate(RequestUpdatePatientJson request){

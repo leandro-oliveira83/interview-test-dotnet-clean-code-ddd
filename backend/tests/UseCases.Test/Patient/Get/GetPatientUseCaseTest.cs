@@ -1,8 +1,11 @@
 using CommonTestUtilities.Entities;
+using CommonTestUtilities.Logging;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using FluentAssertions;
 using interviewTest.PatientService.Application.UseCases.Patient.Get;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace UseCases.Test.Patient.Get;
@@ -28,7 +31,8 @@ public class GetPatientUseCaseTest
     {
         var mapper = MapperBuilder.Build();
         var patientRepositoryBuilder = new PatientRepositoryBuilder().GetAllAsync(patients).Build();
+        var logger = new LoggerBuilder<GetPatientUseCase>();
 
-        return new GetPatientUseCase(patientRepositoryBuilder, mapper);
+        return new GetPatientUseCase(patientRepositoryBuilder, mapper, logger.Build());
     }
 }
