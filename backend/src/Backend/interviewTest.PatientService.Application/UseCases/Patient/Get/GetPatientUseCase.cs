@@ -23,11 +23,20 @@ public class GetPatientUseCase : IGetPatientUseCase
     public async Task<List<ResponsePatientProfileJson>> Execute()
     {
         _logger.LogInformation("Retrieve all patients");
+
+        try
+        {
+            var patients = await _patientRepository.GetAllAsync();
         
-        var patients = await _patientRepository.GetAllAsync();
+            var response = _mapper.Map<List<ResponsePatientProfileJson>>(patients);
         
-        var response = _mapper.Map<List<ResponsePatientProfileJson>>(patients);
-        
-        return response;
+            return response; 
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Retrieve all patients");
+            throw new Exception("Failed to retrieve all patients");
+        }
+
     }
 }

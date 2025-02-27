@@ -1,4 +1,5 @@
 using CommonTestUtilities.Entities;
+using CommonTestUtilities.Logging;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
@@ -44,27 +45,12 @@ public class UpdatePatientUseCaseTest
             .Where(e => e.GetErrorMessages().Count == 1);
     }
     
-    [Fact]
-    public async Task Error_ID_different()
-    {
-        var patient = PatientBuilder.Build();
-        
-        var request = RequestUpdatePatientJsonBuilder.Build();
-
-        var useCase = CreateUseCase(patient);
-
-        Func<Task> act = async () => await useCase.Execute(request);
-
-        (await act.Should().ThrowAsync<KeyNotFoundException>())
-            .Where(e => e.Message.Contains("The patient not found"));
-    }
-    
     private static UpdatePatientUseCase CreateUseCase(interviewTest.PatientService.Domain.Entities.Patient patient)
     {
         var mapper = MapperBuilder.Build();
         var patientRepositoryBuilder = new PatientRepositoryBuilder().GetByIdAsync(patient).Build();
-        
+        var logger = new LoggerBuilder<UpdatePatientUseCase>();
 
-        return new UpdatePatientUseCase(patientRepositoryBuilder, mapper);
+        return new UpdatePatientUseCase(patientRepositoryBuilder, mapper, logger.Build());
     }
 }

@@ -12,7 +12,7 @@ export default function Patients() {
   const fetchPatients = async () => {
     try {
       const { data } = await api.get<Patient[]>('/Patient');
-      setPatients(data.data.data);
+      setPatients(data.data);
     } catch (error) {
       toast.error('Failed to fetch patients.');
     }

@@ -29,12 +29,7 @@ public class PatientController: BaseController
         
         var result = await useCase.Execute(request);
 
-        return Created(string.Empty, new ApiResponseWithData<ResponseRegisteredPatientJson>
-        {
-            Success = true,
-            Message = "Patient created successfully",
-            Data = result
-        });
+        return Created(string.Empty, result, "Patient created successfully");
     }
     
     [HttpGet]
@@ -44,14 +39,7 @@ public class PatientController: BaseController
     {
         var result = await useCase.Execute();
         
-        return Ok(new ApiResponseWithData<List<ResponsePatientProfileJson>>
-        {
-            Success = true,
-            Message = "Patients retrieved successfully",
-            Data = result
-        });
-
-        return Ok();
+        return Ok(result, "Patients retrieved successfully");
     }
     
     [HttpPut]
@@ -69,12 +57,7 @@ public class PatientController: BaseController
         
         var result = await useCase.Execute(request);
 
-        return Created(string.Empty, new ApiResponseWithData<ResponseUpdatedPatientJson>
-        {
-            Success = true,
-            Message = "Patient updated successfully",
-            Data = result
-        });
+        return Ok("Patient updated successfully");
     }
     
     [HttpDelete("{id}")]
@@ -92,11 +75,7 @@ public class PatientController: BaseController
         
         await useCase.Execute(request);
         
-        return Ok(new ApiResponse
-        {
-            Success = true,
-            Message = "Patient deleted successfully"
-        });
+        return Ok("Patient deleted successfully");
     }
 
 }

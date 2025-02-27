@@ -27,14 +27,24 @@ public class RegisterPatientUseCase : IRegisterPatientUseCase
         _logger.LogInformation("Creating a new patient, name: {FirstName}", request.FirstName);
         
         await Validate(request);
+
+        try
+        {
         
-        var patient = _mapper.Map<Domain.Entities.Patient>(request);
+            var patient = _mapper.Map<Domain.Entities.Patient>(request);
         
-        await _patientRepository.CreateAsync(patient);
+            await _patientRepository.CreateAsync(patient);
         
-        var response = _mapper.Map<ResponseRegisteredPatientJson>(patient);
+            var response = _mapper.Map<ResponseRegisteredPatientJson>(patient);
         
-        return response;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Register a new patient  - {Id}", request.FirstName);
+            throw new Exception("Failed to register a new patient");
+        }
+
     }
     
     private async Task Validate(RequestRegisterPatientJson request){
